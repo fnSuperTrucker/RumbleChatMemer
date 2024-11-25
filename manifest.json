@@ -1,4 +1,3 @@
-// This part goes in manifest.json
 {
     "manifest_version": 3,
     "name": "Rumble Chat Images",
@@ -17,4 +16,3 @@
         }
     ]
 }
- 

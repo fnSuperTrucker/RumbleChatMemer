@@ -1,0 +1,72 @@
+
+class TensorField:
+    def __init__(self):
+        self.psi = 44.8
+        self.xi = 3721.8
+        self.epsilon = 0.28082
+        self.tau = 64713.97
+        self.pi = torch.pi
+
+        self.tensor = torch.tensor([
+            [self.psi, self.epsilon, 0, self.pi],
+            [self.epsilon, self.xi, self.tau, 0],
+            [0, self.tau, self.pi, self.epsilon],
+            [self.pi, 0, self.epsilon, self.psi]
+        ], dtype=torch.float64)
+
+    def simulate_time_field(self, time_steps=100, grid_size=50):
+        x = torch.linspace(-1, 1, grid_size)
+        y = torch.linspace(-1, 1, grid_size)
+        X, Y = torch.meshgrid(x, y)
+        time_field = torch.zeros((time_steps, grid_size, grid_size), dtype=torch.float64)
+        for t in range(time_steps):
+            oscillation = torch.sin(self.psi * X + self.epsilon * Y + t / self.tau)
+            dilation = 1 + torch.exp(-self.epsilon * (X**2 + Y**2))
+            entropic_shift = torch.cos(self.tau * Y / (X + 0.1))
+            time_field[t] = oscillation * dilation + entropic_shift
+        return time_field.numpy()
+
+    def get_eigenstructure(self):
+        eigenvalues, eigenvectors = torch.linalg.eig(self.tensor)
+        return eigenvalues, eigenvectors
+
+class QuantumStateProcessor:
+    def __init__(self, n_qubits):
+        self.n_qubits = n_qubits
+        self.state_size = 2 ** n_qubits
+        self.device = 'cpu'
+
+    def create_superposition(self, alpha, beta):
+        alpha, beta = float(alpha), float(beta)
+        norm = (alpha**2 + beta**2) ** 0.5
+        alpha, beta = alpha / norm, beta / norm
+        real = torch.tensor([alpha, beta] + [0.0] * (self.state_size - 2), device=self.device)
+        return ComplexTensor(real)
+
+    def measure_state(self, state, n_samples=1000):
+        probabilities = state.abs().to(self.device)**2å
+        measurements = torch.multinomial(probabilities, n_samples, replacement=True)
+        return measurements
+
+    def get_entanglement_entropy(self, state, partition):
+        shape = [2] * self.n_qubits
+        state_reshaped = state.forward().view(shape)
+        rho_A = self._partial_trace(state_reshaped, partition)
+        eigenvalues = torch.linalg.eigvalsh(rho_A)
+        eigenvalues = eigenvalues[eigenvalues > 1e-10]
+        entropy = -torch.sum(eigenvalues * torch.log2(eigenvalues)).item()
+        return entropy
+
+    def _partial_trace(self, state, partition):
+        n_traced = self.n_qubits - partition
+        dims_A = [2] * partition
+        dims_B = [2] * n_traced
+        state = state.reshape(self._prod(dims_A), self._prod(dims_B))
+        rho = torch.mm(state, state.t().conj())
+        return rho
+
+    def _prod(self, iterable):
+        result = 1
+        for x in iterable:
+            result *= x
+        return result

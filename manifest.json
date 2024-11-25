@@ -1,0 +1,20 @@
+// This part goes in manifest.json
+{
+    "manifest_version": 3,
+    "name": "Rumble Chat Images",
+    "version": "1.0",
+    "description": "Detects image links in Rumble chat",
+    "permissions": [
+        "activeTab"
+    ],
+    "content_scripts": [
+        {
+        "matches": [
+            "https://rumble.com/*"
+        ],
+        "js": ["content.js"],
+        "all_frames": true
+        }
+    ]
+}
+ 

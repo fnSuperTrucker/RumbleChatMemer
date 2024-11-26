@@ -32,8 +32,8 @@ function isVideoUrl(url) {
     if (url.match(/\.(mp4|webm|ogg)$/i)) return true;  
   
     // Check for known video hosting services  
-    if (url.includes('youtube.com') || url.includes('youtu.be')) return true;  
-    if (url.includes('vimeo.com')) return true;  
+    // if (url.includes('youtube.com') || url.includes('youtu.be')) return true;  
+    // if (url.includes('vimeo.com')) return true;  
   
     return false;  
 }  

@@ -1,5 +1,5 @@
 Instructions:
-- extract zip file into edge://extensions or chrome://extensions
+- copy file into edge://extensions or chrome://extensions
 - Toggle 'Developer Mode' on the left
 - Click 'Load Unpacked' at the top and select the RumbleChat folder
  

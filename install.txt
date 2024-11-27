@@ -1,5 +1,5 @@
 Instructions:
-- copy file into edge://extensions or chrome://extensions
+- make a folder RumbleChat copy files into it then put that folder in  edge://extensions or chrome://extensions
 - Toggle 'Developer Mode' on the left
 - Click 'Load Unpacked' at the top and select the RumbleChat folder
  

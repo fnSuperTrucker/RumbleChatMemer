@@ -70,6 +70,7 @@ function createVideoPreview(url) {
     video.style.borderRadius = '4px';  
     video.controls = true;
     video.autoplay = true;
+    video.muted = true; // Add this line to mute the video by default
 
     // Add load handler for scrolling
     video.onloadedmetadata = () => {
